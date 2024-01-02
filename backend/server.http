@@ -1,0 +1,10 @@
+POST http://localhost:5000/boards
+Content-Type: application/json
+
+{
+  "title": "Liberty Mutual",
+  "isAnonymous": true
+}
+
+
+###
