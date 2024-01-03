@@ -150,7 +150,6 @@ const Home = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        height="80vh"
         px={2}
         mt={5}
         mr={8}
