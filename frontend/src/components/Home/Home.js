@@ -150,52 +150,56 @@ const Home = () => {
         flexDirection="row"
         alignItems="center"
         justifyContent="center"
-        px={2}
         mt={5}
-        mr={8}
+        mr={10}
         mb={5}
+        height="calc(100vh - 150px)"
       >
         <Logo />
         <Paper
           style={{
             padding: 20,
-            maxWidth: 600,
+            maxWidth: 620,
             width: "100%",
             overflow: "auto",
           }}
           elevation={2}
         >
           <Title />
-          <Box sx={{ marginTop: "20px", marginBottom: "10px" }}>
-            <TextField
-              sx={{ width: "280px" }}
-              label="Enter Board Title"
-              value={boardTitle}
-              onChange={(e) => setBoardTitle(e.target.value)}
-            />
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={isAnonymous}
-                  onChange={(e) => setIsAnonymous(e.target.checked)}
+          <Box sx={{ marginBottom: "10px", mt: -2 }}>
+            <Box display="flex" alignItems="center">
+              <TextField
+                sx={{ width: "280px", marginRight: "10px" }}
+                label="Enter Board Title"
+                value={boardTitle}
+                onChange={(e) => setBoardTitle(e.target.value)}
+              />
+              <Box>
+                <FormControlLabel
+                  control={
+                    <Switch
+                      checked={isAnonymous}
+                      onChange={(e) => setIsAnonymous(e.target.checked)}
+                    />
+                  }
+                  label="Anonymous"
+                  sx={{
+                    display: "block",
+                    marginTop: 1,
+                    width: "150px",
+                  }}
                 />
-              }
-              label="Anonymous"
-              sx={{
-                display: "block",
-                marginTop: 1,
-                width: "150px",
-              }}
-            />
-            <Typography
-              variant="caption"
-              color="red"
-              sx={{ display: "block", marginBottom: 2 }}
-            >
-              {isAnonymous
-                ? "When Anonymous is enabled, Team identity will be hidden."
-                : "When Anonymous is disabled, Team identity will be revealed."}
-            </Typography>
+                <Typography
+                  variant="caption"
+                  color="red"
+                  sx={{ display: "block", marginBottom: 2 }}
+                >
+                  {isAnonymous
+                    ? "Anonymous is enabled, Team identity will be hidden."
+                    : "Anonymous is disabled, Team identity will be revealed."}
+                </Typography>
+              </Box>
+            </Box>
             <Button
               sx={{
                 textTransform: "none",
