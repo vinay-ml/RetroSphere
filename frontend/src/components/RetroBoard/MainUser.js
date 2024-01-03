@@ -167,7 +167,7 @@ const MainUser = ({
                             mb: 2,
                             display: "flex",
                             flexDirection: "column",
-                            alignItems: "flex-end",
+                            alignItems: "flex-start",
                           }}
                         >
                           <Typography
@@ -179,7 +179,7 @@ const MainUser = ({
                           >
                             {`Comment by ${commentUsername}`}
                           </Typography>
-                          <Typography variant="body2" sx={{ mt: 0.5, ml: 3 }}>
+                          <Typography variant="body2" sx={{ mt: 0.5 }}>
                             {comment.text}
                           </Typography>
                         </Box>

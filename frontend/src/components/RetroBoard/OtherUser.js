@@ -62,7 +62,7 @@ const OtherUser = ({
                         mb: 2,
                         display: "flex",
                         flexDirection: "column",
-                        alignItems: "flex-end",
+                        alignItems: "flex-start",
                       }}
                     >
                       <Typography
@@ -74,7 +74,7 @@ const OtherUser = ({
                       >
                         {`Comment by ${commentUsername}`}
                       </Typography>
-                      <Typography variant="body2" sx={{ mt: 0.5, ml: 3 }}>
+                      <Typography variant="body2" sx={{ mt: 0.5 }}>
                         {comment.text}
                       </Typography>
                     </Box>
@@ -173,7 +173,7 @@ const OtherUser = ({
                 >
                   Comment
                 </Button>
-                <Button
+                {/* <Button
                   sx={{ color: "gray", textTransform: "none" }}
                   size="small"
                 >
@@ -181,7 +181,7 @@ const OtherUser = ({
                 </Button>
                 <Button sx={{ color: "gray" }} size="small">
                   <ThumbDownOffAltIcon fontSize="small" />
-                </Button>
+                </Button> */}
               </Box>
             </Box>
           );
