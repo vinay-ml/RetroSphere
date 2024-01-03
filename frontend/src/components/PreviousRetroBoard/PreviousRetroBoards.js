@@ -131,7 +131,6 @@ const PreviousRetroBoards = () => {
               variant="outlined"
               value={manualBoardId}
               onChange={(e) => setManualBoardId(e.target.value)}
-              disabled={selectedBoardId !== ""}
             />
             <Button
               sx={{ textTransform: "none" }}
