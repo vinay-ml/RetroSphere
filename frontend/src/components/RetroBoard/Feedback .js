@@ -5,6 +5,7 @@ import { categories } from "../utils/utils";
 import FeedbackCardButtons from "./FeedbackCardButtons";
 import MainUser from "./MainUser";
 import OtherUser from "./OtherUser";
+import { CircularProgress } from "@mui/material";
 import "../../App.css";
 
 const Feedback = ({ boardId, boardDetails, socket, userId }) => {
@@ -17,6 +18,7 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
   const [commentingFeedbackId, setCommentingFeedbackId] = useState(null);
   const [commentText, setCommentText] = useState("");
   const [flag, setFlag] = useState(false);
+  const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 
   const fetchFeedbacks = async () => {
     if (!boardId) {
@@ -69,6 +71,7 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
     if (!feedbackText.trim()) {
       return;
     }
+    setIsSendingFeedback(true);
     const payload = {
       type: category,
       content: feedbackText,
@@ -85,9 +88,11 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
+      setIsSendingFeedback(false);
       handleCancel();
     } catch (error) {
       console.error("Error sending feedback:", error);
+      setIsSendingFeedback(false);
     }
   };
 
@@ -254,7 +259,24 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
               category={category}
               handleAddCardClick={handleAddCardClick}
             />
-            {activeCategory === category.title && (
+            {isSendingFeedback && activeCategory === category.title && (
+              <Box
+                sx={{
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                  height: 100, // Adjust height as needed
+                  width: "100%", // Ensure it takes full width
+                  backgroundColor: getCategoryColor(category.title),
+                  borderRadius: "5px",
+                  boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  mt: 1,
+                }}
+              >
+                <CircularProgress />
+              </Box>
+            )}
+            {activeCategory === category.title && !isSendingFeedback && (
               <Box
                 sx={{
                   display: "flex",
