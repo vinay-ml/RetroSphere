@@ -36,6 +36,7 @@ function RetroBoard() {
   const [toast, setToast] = useState({ show: false, message: "", type: "" });
   const [boardSuccess, setBoardSuccess] = useState(false);
   const [typingMembers, setTypingMembers] = useState({});
+  const [isLoadingJoin, setIsLoadingJoin] = useState(false);
 
   // Function to reset state and clear local storage
   const resetBoardState = () => {
@@ -196,6 +197,7 @@ function RetroBoard() {
   };
 
   const handleJoinBoard = async () => {
+    setIsLoadingJoin(true);
     try {
       resetBoardState();
       const requestBody = { name: memberName };
@@ -207,7 +209,6 @@ function RetroBoard() {
         body: JSON.stringify(requestBody),
       });
       const data = await response.json();
-      console.log(data);
       // Storing board details in local storage with a 1-day expiry
       setIsAnonymous(data.isAnonymous);
       setBoardTitle(data.title);
@@ -224,8 +225,10 @@ function RetroBoard() {
       };
       localStorage.setItem("boardData", JSON.stringify(boardDataForStorage));
       setOpenDialog(false);
+      setIsLoadingJoin(false);
     } catch (error) {
       console.error("Error joining board:", error);
+      setIsLoadingJoin(false);
     }
   };
 
@@ -289,22 +292,38 @@ function RetroBoard() {
             )}
           </Box>
         </Stack>
-        {boardSuccess && (
-          <Stack direction="row">
-            <Typography variant="subtitle2" sx={{ color: "green" }}>
-              Board ID: {boardId} activated successfully{" "}
-            </Typography>
-            <DoneAllIcon fontSize="small" sx={{ ml: "4px", color: "green" }} />
-          </Stack>
-        )}
-        {boardSuccess && (
-          <Box sx={{ mt: 3 }}>
-            <Feedback
-              boardId={boardId}
-              boardDetails={boardDetails}
-              userId={userId}
-              socket={socket}
-            />
+        {isLoadingJoin ? (
+          <Box
+            display="flex"
+            justifyContent="center"
+            alignItems="center"
+            height="80vh"
+          >
+            <CircularProgress />
+          </Box>
+        ) : (
+          <Box>
+            {boardSuccess && (
+              <Stack direction="row">
+                <Typography variant="subtitle2" sx={{ color: "green" }}>
+                  Board ID: {boardId} activated successfully{" "}
+                </Typography>
+                <DoneAllIcon
+                  fontSize="small"
+                  sx={{ ml: "4px", color: "green" }}
+                />
+              </Stack>
+            )}
+            {boardSuccess && (
+              <Box sx={{ mt: 3 }}>
+                <Feedback
+                  boardId={boardId}
+                  boardDetails={boardDetails}
+                  userId={userId}
+                  socket={socket}
+                />
+              </Box>
+            )}
           </Box>
         )}
       </Box>
