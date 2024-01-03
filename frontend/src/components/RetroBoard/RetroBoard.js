@@ -37,6 +37,7 @@ function RetroBoard() {
   const [boardSuccess, setBoardSuccess] = useState(false);
   const [typingMembers, setTypingMembers] = useState({});
   const [isLoadingJoin, setIsLoadingJoin] = useState(false);
+  const [validationLoading, setValidationLoading] = useState(true);
 
   // Function to reset state and clear local storage
   const resetBoardState = () => {
@@ -49,8 +50,13 @@ function RetroBoard() {
     setToast({ show: false, message: "", type: "" });
     setBoardSuccess(false);
     setTypingMembers({});
+    setBoardTitle("");
     localStorage.removeItem("boardData"); // Clear boardData from local storage
   };
+
+  useEffect(() => {
+    validateBoardIdInStorage();
+  }, []);
 
   useEffect(() => {
     const storedBoardData = localStorage.getItem("boardData");
@@ -163,6 +169,39 @@ function RetroBoard() {
     }
   }, [boardSuccess]);
 
+  const validateBoardIdInStorage = async () => {
+    const storedBoardData = localStorage.getItem("boardData");
+    if (!storedBoardData) {
+      setValidationLoading(false);
+      return;
+    }
+    const boardData = JSON.parse(storedBoardData);
+    // Check if the stored data has expired
+    if (boardData.expiry <= new Date().getTime()) {
+      localStorage.removeItem("boardData");
+      setValidationLoading(false);
+      return;
+    }
+    setValidationLoading(true);
+    try {
+      const response = await fetch(`/boards/${boardData._id}`);
+      if (!response.ok) {
+        resetBoardState();
+        return;
+      }
+      setBoardId(boardData._id);
+      setBoardTitle(boardData.title);
+      setIsAnonymous(boardData.isAnonymous);
+      setUserId(boardData.userId);
+      setBoardSuccess(boardData.boardSuccess);
+    } catch (error) {
+      console.error("Error validating board ID:", error);
+      resetBoardState();
+    } finally {
+      setValidationLoading(false);
+    }
+  };
+
   const handleBoardIdSubmit = async () => {
     if (id === boardId && boardSuccess) {
       setToast({
@@ -239,94 +278,109 @@ function RetroBoard() {
   return (
     <>
       <NavBar boardTitle={boardTitle} />
-      <Box mt={4} ml={4} mr={1}>
-        <Stack flexDirection="row">
-          <Box sx={{ width: "680px" }}>
-            <TextField
-              label="Enter Board ID"
-              value={id}
-              onChange={(e) => setId(e.target.value)}
-              size="small"
-              sx={{ width: "380px" }}
-              error={toast.show && toast.type === "error"}
-            />
-            <Button
-              type="button"
-              sx={{
-                textTransform: "none",
-                position: "relative",
-                ml: 2,
-                width: "90px",
-              }}
-              variant="contained"
-              onClick={handleBoardIdSubmit}
-              disabled={!id || isLoading}
-            >
-              {isLoading ? <CircularProgress size={24} /> : "Activate"}
-            </Button>
+      {validationLoading ? (
+        <Box
+          sx={{
+            position: "fixed",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
+          }}
+        >
+          <CircularProgress />
+        </Box>
+      ) : (
+        <Box mt={4} ml={4} mr={1}>
+          <Stack flexDirection="row">
+            <Box sx={{ width: "680px" }}>
+              <TextField
+                label="Enter Board ID"
+                value={id}
+                onChange={(e) => setId(e.target.value)}
+                size="small"
+                sx={{ width: "380px" }}
+                error={toast.show && toast.type === "error"}
+              />
+              <Button
+                type="button"
+                sx={{
+                  textTransform: "none",
+                  position: "relative",
+                  ml: 2,
+                  width: "90px",
+                }}
+                variant="contained"
+                onClick={handleBoardIdSubmit}
+                disabled={!id || isLoading}
+              >
+                {isLoading ? <CircularProgress size={24} /> : "Activate"}
+              </Button>
 
-            <MemberName
-              openDialog={openDialog}
-              handleCloseDialog={handleCloseDialog}
-              boardTitle={boardTitle}
-              memberName={memberName}
-              setMemberName={setMemberName}
-              handleJoinBoard={handleJoinBoard}
-            />
-            {toast.show && (
-              <Toast
-                message={toast.message}
-                type={toast.type}
-                onClose={() => setToast({ show: false, message: "", type: "" })}
+              <MemberName
+                openDialog={openDialog}
+                handleCloseDialog={handleCloseDialog}
+                boardTitle={boardTitle}
+                memberName={memberName}
+                setMemberName={setMemberName}
+                handleJoinBoard={handleJoinBoard}
               />
-            )}
-          </Box>
-          <Box flexGrow={1}>
-            {!isAnonymous && (
-              <Joined
-                boardDetails={boardDetails}
-                typingMembers={typingMembers}
-                boardId={boardId}
-                socket={socket}
-              />
-            )}
-          </Box>
-        </Stack>
-        {isLoadingJoin ? (
-          <Box
-            display="flex"
-            justifyContent="center"
-            alignItems="center"
-            height="80vh"
-          >
-            <CircularProgress />
-          </Box>
-        ) : (
-          <Box>
-            {boardSuccess && (
-              <Stack direction="row">
-                <Typography variant="subtitle2" sx={{ color: "green" }}>
-                  Board ID: {boardId} activated successfully{" "}
-                </Typography>
-                <DoneAllIcon
-                  fontSize="small"
-                  sx={{ ml: "4px", color: "green" }}
+              {toast.show && (
+                <Toast
+                  message={toast.message}
+                  type={toast.type}
+                  onClose={() =>
+                    setToast({ show: false, message: "", type: "" })
+                  }
                 />
-              </Stack>
-            )}
-            {boardSuccess && (
-              <Box sx={{ mt: 3 }}>
-                <Feedback
-                  boardId={boardId}
+              )}
+            </Box>
+            <Box flexGrow={1}>
+              {!isAnonymous && (
+                <Joined
                   boardDetails={boardDetails}
-                  userId={userId}
+                  typingMembers={typingMembers}
+                  boardId={boardId}
                   socket={socket}
                 />
-              </Box>
-            )}
-          </Box>
-        )}
-      </Box>
+              )}
+            </Box>
+          </Stack>
+          {isLoadingJoin ? (
+            <Box
+              display="flex"
+              justifyContent="center"
+              alignItems="center"
+              height="80vh"
+            >
+              <CircularProgress />
+            </Box>
+          ) : (
+            <Box>
+              {boardSuccess && (
+                <Stack direction="row">
+                  <Typography variant="subtitle2" sx={{ color: "green" }}>
+                    Board ID: {boardId} activated successfully{" "}
+                  </Typography>
+                  <DoneAllIcon
+                    fontSize="small"
+                    sx={{ ml: "4px", color: "green" }}
+                  />
+                </Stack>
+              )}
+              {boardSuccess && (
+                <Box sx={{ mt: 3 }}>
+                  <Feedback
+                    boardId={boardId}
+                    boardDetails={boardDetails}
+                    userId={userId}
+                    socket={socket}
+                  />
+                </Box>
+              )}
+            </Box>
+          )}
+        </Box>
+      )}
     </>
   );
 }
