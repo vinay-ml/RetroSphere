@@ -16,7 +16,7 @@ const BottomMessage = () => {
       >
         <ShareIcon sx={{ mr: 1, marginTop: "7px" }} /> Copy and share the Board
         ID with your team to join this board and provide feedback on the
-        RetroBoard page.
+        RetroBoard Tab.
       </Typography>
     </>
   );

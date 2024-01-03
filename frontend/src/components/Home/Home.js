@@ -194,8 +194,8 @@ const Home = () => {
               sx={{ display: "block", marginBottom: 2 }}
             >
               {isAnonymous
-                ? "When enabled, Team identity will be hidden."
-                : "When disabled, Team identity will be revealed."}
+                ? "When Anonymous is enabled, Team identity will be hidden."
+                : "When Anonymous is disabled, Team identity will be revealed."}
             </Typography>
             <Button
               sx={{
