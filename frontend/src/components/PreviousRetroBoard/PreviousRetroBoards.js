@@ -26,7 +26,7 @@ const PreviousRetroBoards = () => {
 
   // Effect to reset Select dropdown when TextField is cleared
   useEffect(() => {
-    if (manualBoardId === "") {
+    if (manualBoardId !== "") {
       setSelectedBoardId("");
     }
   }, [manualBoardId]);
@@ -238,7 +238,7 @@ const PreviousRetroBoards = () => {
                                             mb: 2,
                                             display: "flex",
                                             flexDirection: "column",
-                                            alignItems: "flex-end",
+                                            alignItems: "flex-start",
                                           }}
                                         >
                                           <Typography
@@ -252,7 +252,7 @@ const PreviousRetroBoards = () => {
                                           </Typography>
                                           <Typography
                                             variant="body2"
-                                            sx={{ mt: 0.5, ml: 3, pb: 1.5 }}
+                                            sx={{ mt: 0.5, pb: 1.5 }}
                                           >
                                             {comment.text}
                                           </Typography>
