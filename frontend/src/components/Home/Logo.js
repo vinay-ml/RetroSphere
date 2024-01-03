@@ -5,7 +5,7 @@ import { Box } from "@mui/material";
 const Logo = () => {
   return (
     <Box mr={4} display="flex" justifyContent="center">
-      <img src={logo} alt="logo" style={{ maxWidth: "100%", height: "auto" }} />
+      <img src={logo} alt="logo" style={{ maxWidth: "85%", height: "auto" }} />
     </Box>
   );
 };
