@@ -21,7 +21,7 @@ const OtherUser = ({
       {feedbacks
         .filter((fb) => fb.type === category.title && !isMainUser(fb.userId))
         .map((fb) => {
-          const username = fb.isAnonymous ? "Other" : fb?.userId?.split("-")[0];
+          const username = fb.isAnonymous ? "Team" : fb?.userId?.split("-")[0];
           const isCommenting = commentingFeedbackId === fb._id;
           return (
             <Box
