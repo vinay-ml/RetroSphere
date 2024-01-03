@@ -17,7 +17,6 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
   const [typingTimeout, setTypingTimeout] = useState(null);
   const [commentingFeedbackId, setCommentingFeedbackId] = useState(null);
   const [commentText, setCommentText] = useState("");
-  const [flag, setFlag] = useState(false);
   const [isSendingFeedback, setIsSendingFeedback] = useState(false);
 
   const fetchFeedbacks = async () => {
@@ -265,15 +264,16 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
                   display: "flex",
                   justifyContent: "center",
                   alignItems: "center",
-                  height: 100, // Adjust height as needed
-                  width: "100%", // Ensure it takes full width
-                  backgroundColor: getCategoryColor(category.title),
+                  height: 100,
+                  width: "100%",
                   borderRadius: "5px",
                   boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
                   mt: 1,
                 }}
               >
-                <CircularProgress />
+                <CircularProgress
+                  sx={{ color: getCategoryColor(category.title) }}
+                />
               </Box>
             )}
             {activeCategory === category.title && !isSendingFeedback && (
@@ -350,31 +350,33 @@ const Feedback = ({ boardId, boardDetails, socket, userId }) => {
                 </Box>
               </Box>
             )}
-            <MainUser
-              feedbacks={feedbacks}
-              category={category}
-              isMainUser={isMainUser}
-              editingFeedbackId={editingFeedbackId}
-              editedFeedbackText={editedFeedbackText}
-              handleEditedFeedbackText={handleEditedFeedbackText}
-              getCategoryColor={getCategoryColor}
-              handleUpdateFeedback={handleUpdateFeedback}
-              handleCancelEdit={handleCancelEdit}
-              handleEditFeedback={handleEditFeedback}
-              handleDeleteFeedback={handleDeleteFeedback}
-            />
-            <OtherUser
-              feedbacks={feedbacks}
-              category={category}
-              isMainUser={isMainUser}
-              commentingFeedbackId={commentingFeedbackId}
-              handleCommentClick={handleCommentClick}
-              handleCancelComment={handleCancelComment}
-              handleSendComment={handleSendComment}
-              commentText={commentText}
-              setCommentText={setCommentText}
-              handleOnChangeComment={handleOnChangeComment}
-            />
+            <Box>
+              <MainUser
+                feedbacks={feedbacks}
+                category={category}
+                isMainUser={isMainUser}
+                editingFeedbackId={editingFeedbackId}
+                editedFeedbackText={editedFeedbackText}
+                handleEditedFeedbackText={handleEditedFeedbackText}
+                getCategoryColor={getCategoryColor}
+                handleUpdateFeedback={handleUpdateFeedback}
+                handleCancelEdit={handleCancelEdit}
+                handleEditFeedback={handleEditFeedback}
+                handleDeleteFeedback={handleDeleteFeedback}
+              />
+              <OtherUser
+                feedbacks={feedbacks}
+                category={category}
+                isMainUser={isMainUser}
+                commentingFeedbackId={commentingFeedbackId}
+                handleCommentClick={handleCommentClick}
+                handleCancelComment={handleCancelComment}
+                handleSendComment={handleSendComment}
+                commentText={commentText}
+                setCommentText={setCommentText}
+                handleOnChangeComment={handleOnChangeComment}
+              />
+            </Box>
           </Grid>
         ))}
       </Grid>
