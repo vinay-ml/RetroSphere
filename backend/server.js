@@ -8,6 +8,8 @@ const socketIo = require("socket.io");
 const { Board, Feedback, Comment } = require("./models");
 const connectDB = require("./config/db");
 const path = require("path");
+const cron = require("node-cron");
+const axios = require("axios");
 
 dotenv.config();
 connectDB();
@@ -475,6 +477,16 @@ if (process.env.NODE_ENV === "production") {
     res.send("API is running..");
   });
 }
+
+// Schedule a cron job to run every 10 minutes
+cron.schedule("*/10 * * * *", async () => {
+  try {
+    const response = await axios.get("https://retrosphere.onrender.com/ping");
+    console.log("Ping response:", response.data);
+  } catch (error) {
+    console.error("Error pinging server:", error.message);
+  }
+});
 
 const PORT = process.env.PORT || 5000;
 server.listen(PORT, () => {
