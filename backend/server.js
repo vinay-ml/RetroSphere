@@ -478,6 +478,11 @@ if (process.env.NODE_ENV === "production") {
   });
 }
 
+// Ping route to keep the server alive
+app.get("/ping", (req, res) => {
+  res.send("Server is alive");
+});
+
 // Schedule a cron job to run every 10 minutes
 cron.schedule("*/10 * * * *", async () => {
   try {
