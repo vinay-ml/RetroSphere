@@ -9,6 +9,8 @@ const CommentSchema = new mongoose.Schema({
   boardId: { type: String, ref: "Board" },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
+  likedBy: { type: [String], default: [] },
+  dislikedBy: { type: [String], default: [] },
   userId: { type: String, required: false },
 });
 
@@ -25,6 +27,8 @@ const FeedbackSchema = new mongoose.Schema({
   boardId: { type: String, ref: "Board" },
   likes: { type: Number, default: 0 },
   dislikes: { type: Number, default: 0 },
+  likedBy: { type: [String], default: [] },
+  dislikedBy: { type: [String], default: [] },
   comments: [CommentSchema],
   userId: { type: String, required: false },
 });
